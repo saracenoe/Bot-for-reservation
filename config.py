@@ -19,7 +19,7 @@ class DefaultConfig:
     PORT = 8000
     APP_TYPE = os.environ.get("MicrosoftAppType", "MultiTenant")
     APP_ID = "315267ba-6800-4298-bb32-5dd8a7948435" #os.environ.get("MicrosoftAppId", "")
-    APP_PASSWORD = "RpC8Q~OaTmz1YLQ5MnX0toIdSvcJrYA4nnI5Cc0." #os.environ.get("MicrosoftAppPassword", "")
+    APP_PASSWORD = "D5i8Q~TZ5~GkQ8pPeJI3tsR9tZYZ.8-qFmZYWahG" #os.environ.get("MicrosoftAppPassword", "")
     LUIS_APP_ID = os.environ.get("LuisAppId", "")
     LUIS_API_KEY = os.environ.get("LuisAPIKey", "")
     LUIS_API_HOST_NAME = os.environ.get("LuisAPIHostName", "")
