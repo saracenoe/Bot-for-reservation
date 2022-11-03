@@ -23,6 +23,4 @@ class DefaultConfig:
     LUIS_APP_ID = "099431fb-d90d-44b6-a5cf-82a9d8f804e7"
     LUIS_API_KEY = "93d125472bfd46c5ae0e599fcb8207c8"
     LUIS_API_HOST_NAME = "westus.api.cognitive.microsoft.com"
-    APPINSIGHTS_INSTRUMENTATION_KEY = os.environ.get(
-        "AppInsightsInstrumentationKey", ""
-    )
+    APPINSIGHTS_INSTRUMENTATION_KEY = "ba64b9c6-ff1a-4257-9823-01e764b831f5"
