@@ -1,6 +1,10 @@
+# Copyright (c) Microsoft Corporation. All rights reserved.
+# Licensed under the MIT License.
 """Handle date/time resolution for booking dialog."""
 
 from typing import Final
+
+from datatypes_date_time.timex import Timex
 
 from botbuilder.core import BotTelemetryClient, MessageFactory, NullTelemetryClient
 from botbuilder.dialogs import DialogTurnResult, WaterfallDialog, WaterfallStepContext
