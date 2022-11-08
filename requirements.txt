@@ -13,9 +13,6 @@ msrest>=0.6.10
 aiohttp==3.7.4
 botbuilder-integration-aiohttp>=4.11.0
 emoji==1.7
-<<<<<<< HEAD
 pytest
-=======
-pytest
-
->>>>>>> c3b8575bbfdcfa744abd5651050a7f4f6cd3d970
+opencensus
+opencensus-ext-azure
