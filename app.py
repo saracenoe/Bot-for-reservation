@@ -59,23 +59,20 @@ TELEMETRY_CLIENT = ApplicationInsightsTelemetryClient(
 )
 
 # Code for enabling activity and personal information logging.
-TELEMETRY_LOGGER_MIDDLEWARE = TelemetryLoggerMiddleware(
-    telemetry_client=TELEMETRY_CLIENT, log_personal_information=False
-)
+TELEMETRY_LOGGER_MIDDLEWARE = TelemetryLoggerMiddleware(telemetry_client=TELEMETRY_CLIENT, log_personal_information=False)
 ADAPTER.use(TELEMETRY_LOGGER_MIDDLEWARE)
 
 # Create dialogs and Bot
-RECOGNIZER = FlightBookingRecognizer(CONFIG)
+RECOGNIZER = FlightBookingRecognizer(CONFIG, telemetry_client=TELEMETRY_CLIENT)
 BOOKING_DIALOG = BookingDialog(telemetry_client=TELEMETRY_CLIENT)
 DIALOG = MainDialog(RECOGNIZER, BOOKING_DIALOG, telemetry_client=TELEMETRY_CLIENT)
 BOT = DialogAndWelcomeBot(
     CONVERSATION_STATE, USER_STATE, DIALOG, telemetry_client=TELEMETRY_CLIENT
 )
 
-
 # Listen for incoming requests on /api/messages.
 async def messages(req: Request) -> Response:
-    """
+    """~
     Route for incoming requests for messages.
     This method routes the messages to the bot's main handler.
     """
