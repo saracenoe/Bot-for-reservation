@@ -142,7 +142,7 @@ class BookingDialog(CancelAndHelpDialog):
                 TextPrompt.__name__,
                 PromptOptions(
                     prompt=MessageFactory.text(
-                        "💸 How much do you want to spend on this trip ?"
+                        "How much do you want to spend on this trip ?"
                     )
                 ),
             )
@@ -164,25 +164,19 @@ class BookingDialog(CancelAndHelpDialog):
         flight_co2_impact = requests.get(
             f"https://api.monimpacttransport.fr/beta/getEmissionsPerDistance?transportations=1&km={ distance['distance'] }"
         ).json()
-        all_co2_impact = requests.get(
-            f"https://api.monimpacttransport.fr/beta/getEmissionsPerDistance?filter=smart&fields=emoji&km={distance['distance']}"
-        ).json()
-        equivalents = requests.get(
-            "https://raw.githubusercontent.com/datagir/monconvertisseurco2/1677802d89e9f1ad1678a0eb8d506c78e6f1f050/public/data/equivalents.json"
-        ).json()
-
-        msg = f"""
-Please confirm your trip details :
-- You will be travelling from : **{ booking_details.or_city }**
-- to : **{ booking_details.dst_city }**
-- Your idea is to departure on : **{ booking_details.str_date }**
-- and return on : **{ booking_details.end_date }**
-- for a budget of : **{ booking_details.budget }**
-It is important to be aware of the environmental impact of your choice. This trip will produce \
-**{round(flight_co2_impact[0]['emissions']['kgco2e']*2, 2)} kg of CO2eq** \
+        
+        msg = ( 
+            f"Please confirm your trip details :"
+f" - You will be travelling from : **{ booking_details.or_city }**"
+f"- to : **{ booking_details.dst_city }**"
+f"- Your idea is to departure on : **{ booking_details.str_date }**"
+f"- and return on : **{ booking_details.end_date }**"
+f"- for a budget of : **{ booking_details.budget }**"
+f" It is important to be aware of the environmental impact of your choice. This trip will produce \"
+f"**{round(flight_co2_impact[0]['emissions']['kgco2e']*2, 2)} kg of CO2eq** \
 ({round(flight_co2_impact[0]['emissions']['kgco2e']*2 / 2000 * 100, 2)} % \
-of your annual budget of 2000 kg)
-"""
+of your annual budget of 2000 kg)"
+        )
 
         # Offer a YES/NO prompt.
         return await step_context.prompt(
