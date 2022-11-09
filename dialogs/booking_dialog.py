@@ -15,14 +15,14 @@ from botbuilder.schema import InputHints
 from .cancel_and_help_dialog import CancelAndHelpDialog
 from .date_resolver_dialog import DateResolverDialog
 
-#########
-from config import DefaultConfig
-#pour permettre d'envoyer les logs sur app insight
-import logging
-from opencensus.ext.azure.log_exporter import AzureLogHandler
+# #########
+# from config import DefaultConfig
+# #pour permettre d'envoyer les logs sur app insight
+# import logging
+# from opencensus.ext.azure.log_exporter import AzureLogHandler
 
-CONFIG = DefaultConfig()
-#########
+# CONFIG = DefaultConfig()
+# #########
 
 
 class BookingDialog(CancelAndHelpDialog):
@@ -39,11 +39,11 @@ class BookingDialog(CancelAndHelpDialog):
         text_prompt = TextPrompt(TextPrompt.__name__)
         text_prompt.telemetry_client = telemetry_client
         
-        #############
-        self.logger = logging.getLogger(__name__)
-        self.logger.addHandler(AzureLogHandler(connection_string=CONFIG.APPINSIGHTS_CONNECT))
-        self.logger.setLevel(logging.INFO)
-        #############
+#         #############
+#         self.logger = logging.getLogger(__name__)
+#         self.logger.addHandler(AzureLogHandler(connection_string=CONFIG.APPINSIGHTS_CONNECT))
+#         self.logger.setLevel(logging.INFO)
+#         #############
 
         waterfall_dialog = WaterfallDialog(
             WaterfallDialog.__name__,
