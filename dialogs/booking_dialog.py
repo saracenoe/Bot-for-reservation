@@ -2,27 +2,16 @@
 # Licensed under the MIT License.
 """Flight booking dialog."""
 
-from datatypes_date_time.timex import Timex
-import datetime
-
 import requests
 from botbuilder.core import BotTelemetryClient, MessageFactory, NullTelemetryClient
 from botbuilder.core.bot_telemetry_client import Severity
 from botbuilder.dialogs import DialogTurnResult, WaterfallDialog, WaterfallStepContext
 from botbuilder.dialogs.prompts import ConfirmPrompt, PromptOptions, TextPrompt
 from botbuilder.schema import InputHints
+from datatypes_date_time.timex import Timex
 
 from .cancel_and_help_dialog import CancelAndHelpDialog
 from .date_resolver_dialog import DateResolverDialog
-
-# #########
-# from config import DefaultConfig
-# #pour permettre d'envoyer les logs sur app insight
-# import logging
-# from opencensus.ext.azure.log_exporter import AzureLogHandler
-
-# CONFIG = DefaultConfig()
-# #########
 
 
 class BookingDialog(CancelAndHelpDialog):
@@ -38,12 +27,6 @@ class BookingDialog(CancelAndHelpDialog):
         self.telemetry_client = telemetry_client
         text_prompt = TextPrompt(TextPrompt.__name__)
         text_prompt.telemetry_client = telemetry_client
-        
-#         #############
-#         self.logger = logging.getLogger(__name__)
-#         self.logger.addHandler(AzureLogHandler(connection_string=CONFIG.APPINSIGHTS_CONNECT))
-#         self.logger.setLevel(logging.INFO)
-#         #############
 
         waterfall_dialog = WaterfallDialog(
             WaterfallDialog.__name__,
@@ -104,7 +87,7 @@ class BookingDialog(CancelAndHelpDialog):
             return await step_context.prompt(
                 TextPrompt.__name__,
                 PromptOptions(
-                    prompt=MessageFactory.text("Where do you want to go?")
+                    prompt=MessageFactory.text("🛬 Where do you want to go to ?")
                 ),
             )
 
@@ -122,7 +105,6 @@ class BookingDialog(CancelAndHelpDialog):
         booking_details.dst_city = step_context.result.capitalize()
 
         if not booking_details.str_date or self.is_ambiguous(booking_details.str_date):
-            self.logger.info("Bot ask for origin")
             return await step_context.begin_dialog(
                 DateResolverDialog.START_DATE_DIALOG_ID,
                 booking_details.str_date,
