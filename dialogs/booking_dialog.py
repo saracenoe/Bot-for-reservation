@@ -182,10 +182,7 @@ of your annual budget of 2000 kg)"
         return await step_context.prompt(
             ConfirmPrompt.__name__,
             PromptOptions(
-                prompt=MessageFactory.text(
-                    msg, msg, input_hint=InputHints.ignoring_input
-                )
-            ),
+                prompt=MessageFactory.text(msg))
         )
 
     async def final_step(self, step_context: WaterfallStepContext) -> DialogTurnResult:
@@ -194,11 +191,11 @@ of your annual budget of 2000 kg)"
         # Data to be tracked in app insights
         booking_details = step_context.options
         properties = {}
-        properties['destination'] = booking_details.dst_city_step
-        properties['origin'] = booking_details.or_city_step
-        properties['start_travel_date'] = booking_details.str_date_step
-        properties['return_travel_date'] = booking_details.end_date_step
-        properties['budget'] = booking_details.budget_step
+        properties['dst_city_step'] = booking_details.dst_city_step
+        properties['or_city_step'] = booking_details.or_city_step
+        properties['str_date_step'] = booking_details.str_date_step
+        properties['end_date_step'] = booking_details.end_date_step
+        properties['budget_step'] = booking_details.budget_step
         
         #If positive answer
         if step_context.result:
