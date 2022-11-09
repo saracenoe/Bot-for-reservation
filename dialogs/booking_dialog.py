@@ -68,7 +68,7 @@ class BookingDialog(CancelAndHelpDialog):
             return await step_context.prompt(
                 TextPrompt.__name__,
                 PromptOptions(
-                    prompt=MessageFactory.text("🛫 Where do you want to leave from ?")
+                    prompt=MessageFactory.text("Where do you want to leave from ?")
                 ),
             )
 
@@ -87,7 +87,7 @@ class BookingDialog(CancelAndHelpDialog):
             return await step_context.prompt(
                 TextPrompt.__name__,
                 PromptOptions(
-                    prompt=MessageFactory.text("🛬 Where do you want to go to ?")
+                    prompt=MessageFactory.text("Where do you want to go to ?")
                 ),
             )
 
@@ -173,44 +173,16 @@ class BookingDialog(CancelAndHelpDialog):
 
         msg = f"""
 Please confirm your trip details :
-- 🛫 from : **{ booking_details.or_city }**
-- 🛬 to : **{ booking_details.dst_city }**
-- 🥳 departure date : **{ booking_details.str_date }**
-- 😮‍💨 return date : **{ booking_details.end_date }**
-- 💸 for a budget of : **{ booking_details.budget }**
-🏭 This trip will produce \
+- You will be travelling from : **{ booking_details.or_city }**
+- to : **{ booking_details.dst_city }**
+- Your idea is to departure on : **{ booking_details.str_date }**
+- and return on : **{ booking_details.end_date }**
+- for a budget of : **{ booking_details.budget }**
+It is important to be aware of the environmental impact of your choice. This trip will produce \
 **{round(flight_co2_impact[0]['emissions']['kgco2e']*2, 2)} kg of CO2eq** \
 ({round(flight_co2_impact[0]['emissions']['kgco2e']*2 / 2000 * 100, 2)} % \
 of your annual budget of 2000 kg)
----
-As a comparison for the same distance :"""
-
-        for transportation_mode in all_co2_impact:
-            msg = (
-                msg
-                + f"""
-- {transportation_mode['emoji']['main']} {transportation_mode['name']} : {round(transportation_mode['emissions']['kgco2e']*2, 2)} kg of CO2eq"""
-            )
-
-        msg = (
-            msg
-            + """
-This is the equivalent of (one of) :"""
-        )
-
-        for eq in equivalents:
-            msg = (
-                msg
-                + f"""
-- {eq['emoji']} {round(flight_co2_impact[0]['emissions']['kgco2e']*2 / eq['total'])} {eq['name']['fr']}"""
-            )
-
-        msg = (
-            msg
-            + """
----
-_sources : https://monimpacttransport.fr/ and https://monconvertisseurco2.fr/_"""
-        )
+"""
 
         # Offer a YES/NO prompt.
         return await step_context.prompt(
@@ -223,22 +195,33 @@ _sources : https://monimpacttransport.fr/ and https://monconvertisseurco2.fr/_""
         )
 
     async def final_step(self, step_context: WaterfallStepContext) -> DialogTurnResult:
-        """Complete the interaction and end the dialog."""
+        """Complete the interaction, send data to Azure app insights and end the dialog."""
 
+        # Data to be tracked in app insights
         booking_details = step_context.options
-
+        properties = {}
+        properties['destination'] = booking_details.dst_city_step
+        properties['origin'] = booking_details.or_city_step
+        properties['start_travel_date'] = booking_details.str_date_step
+        properties['return_travel_date'] = booking_details.end_date_step
+        properties['budget'] = booking_details.budget_step
+        
+        #If positive answer
         if step_context.result:
             self.telemetry_client.track_trace(
                 "booking_accepted",
-                properties=booking_details.__dict__,
+                properties, "INFO"
             )
 
             return await step_context.end_dialog(booking_details)
-
-        self.telemetry_client.track_trace(
+        else:
+            sorry_msg = "I am sorry, I will improve myself in the near future"
+            prompt_sorry_msg = MessageFactory.text(sorry_msg, sorry_msg, InputHints.ignoring_input)
+            await step_context.context.send_activity(prompt_sorry_msg)
+            properties['init_text'] = booking_details.init_text
+            self.telemetry_client.track_trace(
             "booking_refused",
-            severity=Severity.warning,
-            properties=booking_details.__dict__,
+            , properties, "ERROR"
         )
 
         return await step_context.end_dialog()
