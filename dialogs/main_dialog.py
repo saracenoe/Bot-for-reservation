@@ -3,10 +3,9 @@
 
 """Main dialog that handles booking a flight."""
 from typing import Final
-import datetime
 
 from booking_details import BookingDetails
-from botbuilder.core import BotTelemetryClient, MessageFactory, NullTelemetryClient, TurnContext
+from botbuilder.core import BotTelemetryClient, MessageFactory, NullTelemetryClient
 from botbuilder.dialogs import (
     ComponentDialog,
     DialogTurnResult,
@@ -16,18 +15,10 @@ from botbuilder.dialogs import (
 from botbuilder.dialogs.prompts import PromptOptions, TextPrompt
 from botbuilder.schema import InputHints
 from flight_booking_recognizer import FlightBookingRecognizer
-from helpers.luis_helper import LuisConstants, LuisHelper, Intent
+from helpers.luis_helper import LuisConstants, LuisHelper
 
 from .booking_dialog import BookingDialog
 
-#########
-from config import DefaultConfig
-#pour permettre d'envoyer les logs sur app insight
-import logging
-from opencensus.ext.azure.log_exporter import AzureLogHandler
-
-CONFIG = DefaultConfig()
-#########
 
 class MainDialog(ComponentDialog):
     """Main dialog that handles booking a flight."""
@@ -38,7 +29,7 @@ class MainDialog(ComponentDialog):
         self,
         luis_recognizer: FlightBookingRecognizer,
         booking_dialog: BookingDialog,
-        telemetry_client: BotTelemetryClient = NullTelemetryClient(),
+        telemetry_client: BotTelemetryClient = None,
     ):
         """Initialize the MainDialog with LuisRecognizer."""
         super().__init__(MainDialog.__name__)
@@ -48,12 +39,6 @@ class MainDialog(ComponentDialog):
         text_prompt.telemetry_client = self.telemetry_client
 
         booking_dialog.telemetry_client = self.telemetry_client
-        
-        #############
-        self.logger = logging.getLogger(__name__)
-        self.logger.addHandler(AzureLogHandler(connection_string=CONFIG.APPINSIGHTS_CONNECT))
-        self.logger.setLevel(logging.INFO)
-        #############
 
         wf_dialog = WaterfallDialog(
             MainDialog.INITIAL_DIALOG_ID,
@@ -87,7 +72,7 @@ class MainDialog(ComponentDialog):
         message_text = (
             str(step_context.options)
             if hasattr(step_context, "options") and step_context.options is not None
-            else "Hello there ! What can I do to help you with today?"
+            else "Hello there ! What can I help you with today?"
         )
         prompt_message = MessageFactory.text(
             message_text, message_text, InputHints.expecting_input
@@ -136,9 +121,9 @@ class MainDialog(ComponentDialog):
         # the Result here will be null.
         if step_context.result is not None:
             # Now we have all the booking details call the booking service.
-            msg = "Alright, pack your bags and enjoy the experience"
+            msg = "Alright, pack your bags baby 🚀"
             message = MessageFactory.text(msg, msg, InputHints.ignoring_input)
             await step_context.context.send_activity(message)
 
-        prompt_message = "OK, want to book another trip ?"
+        prompt_message = "OK, want to book another trip ? "
         return await step_context.replace_dialog(self.id, prompt_message)
