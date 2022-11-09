@@ -191,12 +191,12 @@ class BookingDialog(CancelAndHelpDialog):
 
         msg = f"""
 Please confirm your trip details :
-- from : **{ booking_details.or_city }**
-- to : **{ booking_details.dst_city }**
-- departure date : **{ booking_details.str_date }**
-- return date : **{ booking_details.end_date }**
-- for a budget of : **{ booking_details.budget }**
-This trip will produce \
+- 🛫 from : **{ booking_details.or_city }**
+- 🛬 to : **{ booking_details.dst_city }**
+- 🥳 departure date : **{ booking_details.str_date }**
+- 😮‍💨 return date : **{ booking_details.end_date }**
+- 💸 for a budget of : **{ booking_details.budget }**
+🏭 This trip will produce \
 **{round(flight_co2_impact[0]['emissions']['kgco2e']*2, 2)} kg of CO2eq** \
 ({round(flight_co2_impact[0]['emissions']['kgco2e']*2 / 2000 * 100, 2)} % \
 of your annual budget of 2000 kg)
@@ -207,7 +207,7 @@ As a comparison for the same distance :"""
             msg = (
                 msg
                 + f"""
-- {transportation_mode['name']} : {round(transportation_mode['emissions']['kgco2e']*2, 2)} kg of CO2eq"""
+- {transportation_mode['emoji']['main']} {transportation_mode['name']} : {round(transportation_mode['emissions']['kgco2e']*2, 2)} kg of CO2eq"""
             )
 
         msg = (
@@ -220,7 +220,7 @@ This is the equivalent of (one of) :"""
             msg = (
                 msg
                 + f"""
-- {round(flight_co2_impact[0]['emissions']['kgco2e']*2 / eq['total'])} {eq['name']['fr']}"""
+- {eq['emoji']} {round(flight_co2_impact[0]['emissions']['kgco2e']*2 / eq['total'])} {eq['name']['fr']}"""
             )
 
         msg = (
