@@ -11,14 +11,6 @@ from botbuilder.dialogs import (
 )
 from botbuilder.schema import ActivityTypes
 
-#########
-from config import DefaultConfig
-#to allow sending logs to app insight
-import logging
-from opencensus.ext.azure.log_exporter import AzureLogHandler
-
-CONFIG = DefaultConfig()
-#########
 
 class CancelAndHelpDialog(ComponentDialog):
     """Implementation of handling cancel and help."""
@@ -31,12 +23,6 @@ class CancelAndHelpDialog(ComponentDialog):
         """Initialize a new CancelAndHelpDialog instance."""
         super().__init__(dialog_id)
         self.telemetry_client = telemetry_client
-        #############
-        self.logger = logging.getLogger(__name__)
-        self.logger.addHandler(AzureLogHandler(connection_string=CONFIG.APPINSIGHTS_CONNECT))
-        self.logger.setLevel(logging.INFO)
-        #############
-
 
     async def on_begin_dialog(
         self, inner_dc: DialogContext, options: object
@@ -61,28 +47,21 @@ class CancelAndHelpDialog(ComponentDialog):
         if inner_dc.context.activity.type == ActivityTypes.message:
             text = inner_dc.context.activity.text.lower()
 
-            if "help" in text or "?" in text:
+            if text in ("help", "?"):
                 await inner_dc.context.send_activity(
                     """
-Just tell me **where** you want to travel to (cities of origin and destination).
-Ex.:'I want to travel from Seattle to San Francisco'\n
-
-I will also need to know **when** you want to travel (dates of departure and return).
-Ex.:'I want to travel on May 1, 2020 and return on May 5, 2020'\n
-
-Finally, you can give me a **budget** for your trip.
-Ex.:'I want to travel for $500'\n
-
-We can start over from scratch anytime if you just say _'Cancel'_"""
+🏙️ Just tell me **where** you want to travel to (cities of origin and destination).
+Ex. : _'I want to travel from Seattle to San Francisco'_
+📅 I will also need to know **when** you want to travel (dates of departure and return).
+Ex. : _'I want to travel on May 1, 2020 and return on May 5, 2020'_
+💸 Finally, you can give me a **budget** for your trip.
+Ex. : _'I want to travel for $500'_
+🪃 We can sart over from scratch anytime if you just say _'Cancel'_"""
                 )
                 return DialogTurnResult(DialogTurnStatus.Waiting)
 
-#             if text in ("cancel", "quit"):
-#                 await inner_dc.context.send_activity("It's OK to change your mind")
-#                 return await inner_dc.cancel_all_dialogs()
             if text in ("cancel", "quit"):
-                self.logger.warning("USER INTERRUPTION")
-                #await inner_dc.context.send_activity("Cancelling")
+                await inner_dc.context.send_activity("It's OK to change your mind 🧘")
                 return await inner_dc.cancel_all_dialogs()
-            
+
         return None
