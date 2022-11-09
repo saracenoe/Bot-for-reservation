@@ -72,7 +72,7 @@ class MainDialog(ComponentDialog):
         message_text = (
             str(step_context.options)
             if hasattr(step_context, "options") and step_context.options is not None
-            else "Hello there ! What can I help you with today?"
+            else "Hello there ! What can I do for you today ?"
         )
         prompt_message = MessageFactory.text(
             message_text, message_text, InputHints.expecting_input
@@ -120,10 +120,11 @@ class MainDialog(ComponentDialog):
         # If the child dialog ("BookingDialog") was cancelled or the user failed to confirm,
         # the Result here will be null.
         if step_context.result is not None:
+            result = step_context.result
             # Now we have all the booking details call the booking service.
-            msg = "Alright, pack your bags baby 🚀"
+            msg = "Alright, pack your bags and be ready to enjoy the experience"
             message = MessageFactory.text(msg, msg, InputHints.ignoring_input)
             await step_context.context.send_activity(message)
 
-        prompt_message = "OK, want to book another trip ? "
+        prompt_message = "What else can I do for you? "
         return await step_context.replace_dialog(self.id, prompt_message)
