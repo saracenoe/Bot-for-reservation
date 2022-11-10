@@ -217,15 +217,24 @@ _sources : https://api.monimpacttransport.fr_"""
             return await step_context.end_dialog(booking_details)
         
         else:
+            self.telemetry_client.track_trace("booking_refused",severity=Severity.warning,
+            properties=booking_details.__dict__,)
             sorry_msg = "I am sorry, I will ask the technicians to improve me in the near future"
             prompt_sorry_msg = MessageFactory.text(sorry_msg, sorry_msg, InputHints.ignoring_input)
             await step_context.context.send_activity(prompt_sorry_msg)
-            properties['init_text'] = booking_details.init_text
-            self.telemetry_client.track_trace("booking_refused",severity=Severity.warning,
-            properties=booking_details.__dict__,
-         )
+            
+            
+        
+#         else:
+#             sorry_msg = "I am sorry, I will ask the technicians to improve me in the near future"
+#             prompt_sorry_msg = MessageFactory.text(sorry_msg, sorry_msg, InputHints.ignoring_input)
+#             await step_context.context.send_activity(prompt_sorry_msg)
+#             properties['init_text'] = booking_details.init_text
+#             self.telemetry_client.track_trace("booking_refused",severity=Severity.warning,
+#             properties=booking_details.__dict__,
+#          )
 
-        return await step_context.end_dialog()
+            return await step_context.end_dialog()
 
     @staticmethod
     def is_ambiguous(timex: str) -> bool:
