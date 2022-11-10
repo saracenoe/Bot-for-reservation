@@ -47,21 +47,21 @@ class CancelAndHelpDialog(ComponentDialog):
         if inner_dc.context.activity.type == ActivityTypes.message:
             text = inner_dc.context.activity.text.lower()
 
-            if text in ("help", "?"):
+            if "help" in text or "?" in text:
                 await inner_dc.context.send_activity(
                     """
-🏙️ Just tell me **where** you want to travel to (cities of origin and destination).
-Ex. : _'I want to travel from Seattle to San Francisco'_
-📅 I will also need to know **when** you want to travel (dates of departure and return).
-Ex. : _'I want to travel on May 1, 2020 and return on May 5, 2020'_
-💸 Finally, you can give me a **budget** for your trip.
-Ex. : _'I want to travel for $500'_
+Just tell me **where** you want to travel to (cities of origin and destination).
+Ex. : _'I want to travel from Seattle to San Francisco'_\n
+I will also need to know **when** you want to travel (dates of departure and return).
+Ex. : _'I want to travel on May 1, 2020 and return on May 5, 2020'_\n
+Finally, you can give me a **budget** for your trip.
+Ex. : _'I want to travel for $500'_\n
 🪃 We can sart over from scratch anytime if you just say _'Cancel'_"""
                 )
                 return DialogTurnResult(DialogTurnStatus.Waiting)
 
             if text in ("cancel", "quit"):
-                await inner_dc.context.send_activity("It's OK to change your mind 🧘")
+                await inner_dc.context.send_activity("Cancelling")
                 return await inner_dc.cancel_all_dialogs()
 
         return None
