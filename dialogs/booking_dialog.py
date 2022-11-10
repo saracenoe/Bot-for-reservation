@@ -172,8 +172,8 @@ f"- to : **{ booking_details.dst_city }**"
 f"- Your idea is to departure on : **{ booking_details.str_date }**"
 f"- and return on : **{ booking_details.end_date }**"
 f"- for a budget of : **{ booking_details.budget }**"
-f" It is important to be aware of the environmental impact of your choice. This trip will produce \"
-f"**{round(flight_co2_impact[0]['emissions']['kgco2e']*2, 2)} kg of CO2eq** \
+f" It is important to be aware of the environmental impact of your choice. This trip will produce \
+**{round(flight_co2_impact[0]['emissions']['kgco2e']*2, 2)} kg of CO2eq** \
 ({round(flight_co2_impact[0]['emissions']['kgco2e']*2 / 2000 * 100, 2)} % \
 of your annual budget of 2000 kg)"
         )
