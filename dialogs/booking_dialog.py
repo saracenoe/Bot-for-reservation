@@ -68,7 +68,7 @@ class BookingDialog(CancelAndHelpDialog):
             return await step_context.prompt(
                 TextPrompt.__name__,
                 PromptOptions(
-                    prompt=MessageFactory.text("🛫 Where do you want to leave from ?")
+                    prompt=MessageFactory.text("Where do you want to leave from ?")
                 ),
             )
 
@@ -87,7 +87,7 @@ class BookingDialog(CancelAndHelpDialog):
             return await step_context.prompt(
                 TextPrompt.__name__,
                 PromptOptions(
-                    prompt=MessageFactory.text("🛬 Where do you want to go to ?")
+                    prompt=MessageFactory.text("Where do you want to go to ?")
                 ),
             )
 
@@ -142,7 +142,7 @@ class BookingDialog(CancelAndHelpDialog):
                 TextPrompt.__name__,
                 PromptOptions(
                     prompt=MessageFactory.text(
-                        "💸 How much do you want to spend on this trip ?"
+                        "How much do you want to spend on this trip ?"
                     )
                 ),
             )
@@ -164,52 +164,25 @@ class BookingDialog(CancelAndHelpDialog):
         flight_co2_impact = requests.get(
             f"https://api.monimpacttransport.fr/beta/getEmissionsPerDistance?transportations=1&km={ distance['distance'] }"
         ).json()
-        all_co2_impact = requests.get(
-            f"https://api.monimpacttransport.fr/beta/getEmissionsPerDistance?filter=smart&fields=emoji&km={distance['distance']}"
-        ).json()
-        equivalents = requests.get(
-            "https://raw.githubusercontent.com/datagir/monconvertisseurco2/1677802d89e9f1ad1678a0eb8d506c78e6f1f050/public/data/equivalents.json"
-        ).json()
+      
 
         msg = f"""
 Please confirm your trip details :
-- 🛫 from : **{ booking_details.or_city }**
-- 🛬 to : **{ booking_details.dst_city }**
-- 🥳 departure date : **{ booking_details.str_date }**
-- 😮‍💨 return date : **{ booking_details.end_date }**
-- 💸 for a budget of : **{ booking_details.budget }**
-🏭 This trip will produce \
+- You will be travelling from : **{ booking_details.or_city }**
+- to : **{ booking_details.dst_city }**
+- Your idea is to departure on : **{ booking_details.str_date }**
+- and return on : **{ booking_details.end_date }**
+- for a budget of : **{ booking_details.budget }**
+It is important to be aware of the environmental impact of your choice. This trip will produce \
 **{round(flight_co2_impact[0]['emissions']['kgco2e']*2, 2)} kg of CO2eq** \
 ({round(flight_co2_impact[0]['emissions']['kgco2e']*2 / 2000 * 100, 2)} % \
 of your annual budget of 2000 kg)
----
-As a comparison for the same distance :"""
-
-        for transportation_mode in all_co2_impact:
-            msg = (
-                msg
-                + f"""
-- {transportation_mode['emoji']['main']} {transportation_mode['name']} : {round(transportation_mode['emissions']['kgco2e']*2, 2)} kg of CO2eq"""
-            )
-
-        msg = (
-            msg
-            + """
-This is the equivalent of (one of) :"""
-        )
-
-        for eq in equivalents:
-            msg = (
-                msg
-                + f"""
-- {eq['emoji']} {round(flight_co2_impact[0]['emissions']['kgco2e']*2 / eq['total'])} {eq['name']['fr']}"""
-            )
-
+"""
         msg = (
             msg
             + """
 ---
-_sources : https://monimpacttransport.fr/ and https://monconvertisseurco2.fr/_"""
+_sources : https://api.monimpacttransport.fr_"""
         )
 
         # Offer a YES/NO prompt.
