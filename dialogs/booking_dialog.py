@@ -200,18 +200,18 @@ _sources : https://api.monimpacttransport.fr_"""
         
         # Data to be tracked in app insights
         booking_details = step_context.options
-        properties = {}
-        properties['dst_city_step'] = booking_details.dst_city_step
-        properties['or_city_step'] = booking_details.or_city_step
-        properties['str_date_step'] = booking_details.str_date_step
-        properties['end_date_step'] = booking_details.end_date_step
-        properties['budget_step'] = booking_details.budget_step
+#         properties = {}
+#         properties['dst_city_step'] = booking_details.dst_city_step
+#         properties['or_city_step'] = booking_details.or_city_step
+#         properties['str_date_step'] = booking_details.str_date_step
+#         properties['end_date_step'] = booking_details.end_date_step
+#         properties['budget_step'] = booking_details.budget_step
         
 
         if step_context.result:
             self.telemetry_client.track_trace(
                 "booking_accepted",
-                properties
+                properties=booking_details.__dict__,
             )
 
             return await step_context.end_dialog(booking_details)
@@ -221,7 +221,9 @@ _sources : https://api.monimpacttransport.fr_"""
             prompt_sorry_msg = MessageFactory.text(sorry_msg, sorry_msg, InputHints.ignoring_input)
             await step_context.context.send_activity(prompt_sorry_msg)
             properties['init_text'] = booking_details.init_text
-            self.telemetry_client.track_trace("booking_refused",properties)
+            self.telemetry_client.track_trace("booking_refused",severity=Severity.warning,
+            properties=booking_details.__dict__,
+         )
 
         return await step_context.end_dialog()
 
