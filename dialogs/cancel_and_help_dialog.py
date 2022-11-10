@@ -21,7 +21,7 @@ class CancelAndHelpDialog(ComponentDialog):
         telemetry_client: BotTelemetryClient = NullTelemetryClient(),
     ):
         """Initialize a new CancelAndHelpDialog instance."""
-        super(CancelAndHelpDialog, self).__init__(dialog_id)
+        super().__init__(dialog_id)
         self.telemetry_client = telemetry_client
 
     async def on_begin_dialog(
@@ -32,7 +32,7 @@ class CancelAndHelpDialog(ComponentDialog):
         if result is not None:
             return result
 
-        return await super(CancelAndHelpDialog, self).on_begin_dialog(inner_dc, options)
+        return await super().on_begin_dialog(inner_dc, options)
 
     async def on_continue_dialog(self, inner_dc: DialogContext) -> DialogTurnResult:
         """Handle the continue dialog event."""
@@ -40,7 +40,7 @@ class CancelAndHelpDialog(ComponentDialog):
         if result is not None:
             return result
 
-        return await super(CancelAndHelpDialog, self).on_continue_dialog(inner_dc)
+        return await super().on_continue_dialog(inner_dc)
 
     async def interrupt(self, inner_dc: DialogContext) -> DialogTurnResult:
         """Detect interruptions."""
