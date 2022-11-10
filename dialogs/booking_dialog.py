@@ -211,16 +211,17 @@ _sources : https://api.monimpacttransport.fr_"""
         if step_context.result:
             self.telemetry_client.track_trace(
                 "booking_accepted",
-                properties, "INFO"
+                properties
             )
 
             return await step_context.end_dialog(booking_details)
-
-        self.telemetry_client.track_trace(
-            "booking_refused",
-            severity=Severity.warning,
-            properties, "ERROR"
-        )
+        
+        else:
+            sorry_msg = "I am sorry, I will ask the technicians to improve me in the near future"
+            prompt_sorry_msg = MessageFactory.text(sorry_msg, sorry_msg, InputHints.ignoring_input)
+            await step_context.context.send_activity(prompt_sorry_msg)
+            properties['init_text'] = booking_details.init_text
+            self.telemetry_client.track_trace("booking_refused",properties)
 
         return await step_context.end_dialog()
 
