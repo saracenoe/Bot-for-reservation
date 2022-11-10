@@ -211,7 +211,7 @@ _sources : https://api.monimpacttransport.fr_"""
         if step_context.result:
             self.telemetry_client.track_trace(
                 "booking_accepted",
-                properties= properties,
+                properties, "INFO"
             )
 
             return await step_context.end_dialog(booking_details)
@@ -219,7 +219,7 @@ _sources : https://api.monimpacttransport.fr_"""
         self.telemetry_client.track_trace(
             "booking_refused",
             severity=Severity.warning,
-            properties= properties,
+            properties, "ERROR"
         )
 
         return await step_context.end_dialog()
