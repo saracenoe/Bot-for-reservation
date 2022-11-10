@@ -168,11 +168,11 @@ class BookingDialog(CancelAndHelpDialog):
 
         msg = f"""
 Please confirm your trip details :
-- You will be travelling from : **{ booking_details.or_city }**
-- to : **{ booking_details.dst_city }**
-- Your idea is to departure on : **{ booking_details.str_date }**
-- and return on : **{ booking_details.end_date }**
-- for a budget of : **{ booking_details.budget }**
+- You will be travelling from : **{ booking_details.or_city }**\n
+- to : **{ booking_details.dst_city }**\n
+- Your idea is to departure on : **{ booking_details.str_date }**\n
+- and return on : **{ booking_details.end_date }**\n
+- Your budget is: : **{ booking_details.budget }**\n
 It is important to be aware of the environmental impact of your choice. This trip will produce \
 **{round(flight_co2_impact[0]['emissions']['kgco2e']*2, 2)} kg of CO2eq** \
 ({round(flight_co2_impact[0]['emissions']['kgco2e']*2 / 2000 * 100, 2)} % \
@@ -197,13 +197,21 @@ _sources : https://api.monimpacttransport.fr_"""
 
     async def final_step(self, step_context: WaterfallStepContext) -> DialogTurnResult:
         """Complete the interaction and end the dialog."""
-
+        
+        # Data to be tracked in app insights
         booking_details = step_context.options
+        properties = {}
+        properties['dst_city_step'] = booking_details.dst_city_step
+        properties['or_city_step'] = booking_details.or_city_step
+        properties['str_date_step'] = booking_details.str_date_step
+        properties['end_date_step'] = booking_details.end_date_step
+        properties['budget_step'] = booking_details.budget_step
+        
 
         if step_context.result:
             self.telemetry_client.track_trace(
                 "booking_accepted",
-                properties=booking_details.__dict__,
+                properties= properties,
             )
 
             return await step_context.end_dialog(booking_details)
@@ -211,7 +219,7 @@ _sources : https://api.monimpacttransport.fr_"""
         self.telemetry_client.track_trace(
             "booking_refused",
             severity=Severity.warning,
-            properties=booking_details.__dict__,
+            properties= properties,
         )
 
         return await step_context.end_dialog()
