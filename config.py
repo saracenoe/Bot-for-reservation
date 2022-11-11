@@ -25,6 +25,6 @@ class DefaultConfig:
     LUIS_API_HOST_NAME = "westus.api.cognitive.microsoft.com"
     APPINSIGHTS_INSTRUMENTATION_KEY = "ba64b9c6-ff1a-4257-9823-01e764b831f5"
    
-    APPINSIGHTS_CONNECT = "InstrumentationKey=ba64b9c6-ff1a-4257-9823-01e764b831f5;IngestionEndpoint=https://westus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://westus.livediagnostics.monitor.azure.com/"
+   # APPINSIGHTS_CONNECT = "InstrumentationKey=ba64b9c6-ff1a-4257-9823-01e764b831f5;IngestionEndpoint=https://westus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://westus.livediagnostics.monitor.azure.com/"
     
 
