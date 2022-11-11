@@ -120,7 +120,7 @@ class MainDialog(ComponentDialog):
         # If the child dialog ("BookingDialog") was cancelled or the user failed to confirm,
         # the Result here will be null.
         if step_context.result is not None:
-            #result = step_context.result
+            result = step_context.result
             # Now we have all the booking details call the booking service.
             msg = "Alright, pack your bags and be ready to enjoy the experience"
             message = MessageFactory.text(msg, msg, InputHints.ignoring_input)
