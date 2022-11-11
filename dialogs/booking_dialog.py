@@ -159,7 +159,7 @@ class BookingDialog(CancelAndHelpDialog):
         booking_details.budget = step_context.result
 
         distance = requests.get(
-            f"https://www.distance24.org/route.json?stops={booking_details.or_city}|{booking_details.dst_city}"
+            f"https://www.fr.distance24.org/route.json?stops={booking_details.or_city}|{booking_details.dst_city}"
         ).json()
         flight_co2_impact = requests.get(
             f"https://api.monimpacttransport.fr/beta/getEmissionsPerDistance?transportations=1&km={ distance['distance'] }"
