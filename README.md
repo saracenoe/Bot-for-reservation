@@ -36,7 +36,10 @@ Goal : use Azure Cognitive Services (LUIS), Azure Web App and Azure Application 
    Run the bot locally. To do that:
    
     python app.py
-   Copy the link you get into the emulator, adding "/api/messages" and the end of the URL and open the bot. 
+   Copy the link you get into the emulator, adding 
+    
+    /api/messages 
+   at the end of the URL and open the bot. 
       
  ## Author
  
