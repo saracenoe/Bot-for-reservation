@@ -158,12 +158,13 @@ class BookingDialog(CancelAndHelpDialog):
         # Capture the results of the previous step
         booking_details.budget = step_context.result
 
-        distance = requests.get(
-            f"https://www.fr.distance24.org/route.json?stops={booking_details.or_city}|{booking_details.dst_city}"
-        ).json()
-        flight_co2_impact = requests.get(
-            f"https://api.monimpacttransport.fr/beta/getEmissionsPerDistance?transportations=1&km={ distance['distance'] }"
-        ).json()
+#         distance = requests.get(
+#             f"https://www.fr.distance24.org/route.json?stops={booking_details.or_city}|{booking_details.dst_city}"
+#             https://fr.distance24.org/route.json?stops=
+#         ).json()
+#         flight_co2_impact = requests.get(
+#             f"https://api.monimpacttransport.fr/beta/getEmissionsPerDistance?transportations=1&km={ distance['distance'] }"
+#         ).json()
       
 
         msg = f"""
@@ -173,11 +174,12 @@ Please confirm your trip details :
 - Your idea is to departure on : **{ booking_details.str_date }**\n
 - and return on : **{ booking_details.end_date }**\n
 - Your budget is: : **{ booking_details.budget }**\n
-It is important to be aware of the environmental impact of your choice. This trip will produce \
-**{round(flight_co2_impact[0]['emissions']['kgco2e']*2, 2)} kg of CO2eq** \
-({round(flight_co2_impact[0]['emissions']['kgco2e']*2 / 2000 * 100, 2)} % \
-of your annual budget of 2000 kg)
+
 """
+# It is important to be aware of the environmental impact of your choice. This trip will produce \
+# **{round(flight_co2_impact[0]['emissions']['kgco2e']*2, 2)} kg of CO2eq** \
+# ({round(flight_co2_impact[0]['emissions']['kgco2e']*2 / 2000 * 100, 2)} % \
+# of your annual budget of 2000 kg)
         msg = (
             msg
             + """
