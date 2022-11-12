@@ -13,18 +13,12 @@ load_dotenv()
 class DefaultConfig:
     """Configuration for the bot."""
 
-
-
-    # PORT = 3978 # en local
     PORT = 8000
-    APP_TYPE =  "MultiTenant"
-    APP_ID = "315267ba-6800-4298-bb32-5dd8a7948435"
-    APP_PASSWORD = "D5i8Q~TZ5~GkQ8pPeJI3tsR9tZYZ.8-qFmZYWahG"
-    LUIS_APP_ID = "099431fb-d90d-44b6-a5cf-82a9d8f804e7"
-    LUIS_API_KEY = "93d125472bfd46c5ae0e599fcb8207c8"
-    LUIS_API_HOST_NAME = "westus.api.cognitive.microsoft.com"
-    APPINSIGHTS_INSTRUMENTATION_KEY = "ba64b9c6-ff1a-4257-9823-01e764b831f5"
-   
-   # APPINSIGHTS_CONNECT = "InstrumentationKey=ba64b9c6-ff1a-4257-9823-01e764b831f5;IngestionEndpoint=https://westus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://westus.livediagnostics.monitor.azure.com/"
-    
-
+    APP_ID = os.environ.get("MicrosoftAppId")
+    APP_PASSWORD = os.environ.get("MicrosoftAppPassword")
+    LUIS_APP_ID = os.environ.get("LuisAPPId")
+    LUIS_API_KEY = os.environ.get("LuisAPIKey")
+    # LUIS endpoint host name, ie "westus.api.cognitive.microsoft.com"
+    LUIS_API_HOST_NAME = os.environ.get("LuisAPIHostName")
+    APPINSIGHTS_INSTRUMENTATION_KEY = os.environ.get(
+        "InstrumentationKey")
